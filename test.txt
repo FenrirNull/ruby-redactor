@@ -1,0 +1,3 @@
+John connected from 192.168.1.50.
+Contact John at john.smith@example.com.
+Mary connected from 10.0.0.25.
