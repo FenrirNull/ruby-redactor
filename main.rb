@@ -6,8 +6,6 @@
 ## AI, but don't want to tell it all about your life This works with IPv4 only
 ## right now
 ## 
-## TODO: Make it so users can type custom strings to redact.
-## Best for names, which vary from person to person.
 
 # Use Ruby builtin command line parser see https://docs.ruby-lang.org/en/master/optparse/tutorial_rdoc.html
 require 'optparse'
@@ -17,14 +15,21 @@ parser = OptionParser.new
 
 # Define the options that we want:
 parser.on('--redact-ip BOOL', TrueClass, 'Toggles redaction of ip addresses. Default on')
+parser.on('--redact-email BOOL', TrueClass, 'Toggles redaction of email addresses. Default on')
+#parser.on('--redact-string ORIGINAL REPLACEMENT', String, 'Replaces the original string with the replacement')
+parser.on('--redact-string LIST', Array, 'Original and replacement') do |list|
+  original, replacement = list
+end
 
 # Perform the command line parsing and spit it into the options that we can use
 # later. This is the default options list that will be modified as needed by
 # the parser.
 options = {
-  :"redact-ip" => true
+  :'redact-ip' => true,
+  :'redact-email' => true,
 }
 parser.parse!(into: options)
+puts options
 
 # Now we can pull the file paths out from ARGV
 if ARGV[0,1].empty?
@@ -61,7 +66,7 @@ File.open(OUTPUT_FILE, "w") do |output|
 
   File.foreach(INPUT_FILE) do |input_file_line|
 
-    input_file_line = redactor.parse_line(input_file_line)
+    input_file_line = redactor.parse_data(input_file_line)
     
 
     #unless name.empty?
