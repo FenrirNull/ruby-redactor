@@ -22,6 +22,7 @@ class TestData
     'firstname-lastname@example.com',
   ]
 
+  # Sampled from https://github.com/sindresorhus/ip-regex
   IPV4 = [
     '0.0.0.0',
     '8.8.8.8',
