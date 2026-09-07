@@ -1,6 +1,6 @@
 # Usage
 
-`ruby redact.rb <input_file> <output_file> [options]`
+`ruby main.rb <input_file> <output_file> [options]`
 
 # Run tests
 

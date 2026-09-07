@@ -16,7 +16,6 @@ parser = OptionParser.new
 # Define the options that we want:
 parser.on('--redact-ip BOOL', TrueClass, 'Toggles redaction of ip addresses. Default on')
 parser.on('--redact-email BOOL', TrueClass, 'Toggles redaction of email addresses. Default on')
-#parser.on('--redact-string ORIGINAL REPLACEMENT', String, 'Replaces the original string with the replacement')
 parser.on('--redact-string LIST', Array, 'Original and replacement') do |list|
   original, replacement = list
 end
@@ -37,10 +36,10 @@ if ARGV[0,1].empty?
     Error: No input file specified.
 
     Usage:
-      ruby redact.rb <input_file> <output_file> [options]
+      ruby main.rb <input_file> <output_file> [options]
 
     Example:
-      ruby redact.rb report.txt redacted.txt
+      ruby main.rb report.txt redacted.txt
 
     Run ruby redact.rb --help for more command line options.
   ERROR
@@ -67,12 +66,7 @@ File.open(OUTPUT_FILE, "w") do |output|
   File.foreach(INPUT_FILE) do |input_file_line|
 
     input_file_line = redactor.parse_data(input_file_line)
-    
-
-    #unless name.empty?
-    #  input_file_line = input_file_line.gsub(name, replacement_name)
-    #end
-    
+        
     puts input_file_line
 
     # Finally after removing all stuff from the line, write it to file
