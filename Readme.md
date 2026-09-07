@@ -8,9 +8,9 @@
 
 # TODO
 
-- [ ] Custom string redaction
+- [x] Custom string redaction
   - [x] Match single string
-  - [ ] Match multiple strings
+  - [x] Match multiple strings
 - [ ] Flesh out testing
   - [ ] Custom string testing
   - [ ] Finish IP matching testing
