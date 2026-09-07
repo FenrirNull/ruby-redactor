@@ -11,5 +11,6 @@
 - [ ] Flesh out testing
   - [ ] Custom string testing
   - [ ] Finish IP matching testing
-    - [ ] Fix IPV6 matches
+    - [ ] Validate IPv4 addresses before changing them
+    - [ ] Fix IPv6 matches
     - [ ] Fix embedded IPv4 addresses in IPv6

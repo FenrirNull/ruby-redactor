@@ -19,10 +19,26 @@ class Redact
   #
   # @param [String] the data to be parsed.
   # @retval [String] the redacted data.
+  #
+  # IPv4 notes:
+  # Misses line 46 in the test data. It does not check for the leading period at the beginning
+  # For some reason, does not catch the IP addresses on line 59 and 60
   def parse_data(data)
     # Check if we should redact ip addresses:
     if @options[:"redact-ip"] && @options[:"redact-ip"] == true
-      data.gsub!(/\b(?:\d{1,3}\.){3}\d{1,3}\b/, DEFAULT_IP_ADDRESS)
+
+      # data.gsub!(/\b(?:\d{1,3}\.){3}\d{1,3}\b/, DEFAULT_IP_ADDRESS)
+      
+      potential_ip4_address = data.scan(/\b(?:\d{1,3}\.){3}\d{1,3}\b/)
+
+      potential_ip4_address.each do |candidate|
+        begin
+          ip = IPAddr.new(candidate)
+          data = data.sub(candidate, DEFAULT_IP_ADDRESS)
+        rescue IPAddr::InvalidAddressError
+          # Not a valid IPv4 address
+        end
+      end
     end
 
     # Check if we should redact email addresses
