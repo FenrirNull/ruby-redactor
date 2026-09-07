@@ -36,9 +36,16 @@ class Redact
     while idx < @options[:'redact-string'].length
 
       if @options[:'redact-string']
-        name = @options[:'redact-string'][idx]
-        replacement_name = @options[:'redact-string'][idx + 1]
-        data.gsub!(name, replacement_name)
+        if @options[:'redact-string'][idx] != nil
+          if @options[:'redact-string'][idx + 1] != nil
+          
+          name = @options[:'redact-string'][idx]
+          replacement_name = @options[:'redact-string'][idx + 1]
+          data.gsub!(name, replacement_name)
+
+          end
+
+        end
       end
 
       idx += 2
