@@ -1,55 +1,81 @@
-## FenrrirNull
-## This is a program writen in ruby, that will automatically
-## redact email addresses, and ip addresses. It
-## replaces them with the generic address of
-## foobar@fenrirnull.com
-## This program is useful if you do a lot of stuff with AI,
-## but don't want to tell it all about your life
-## This works with IPv4 only right now
+## FenrrirNull, bionickatana
+##
+## This is a program writen in ruby, that will automatically redact email
+## addresses, and ip addresses. It replaces them with the generic address of
+## foobar@fenrirnull.com This program is useful if you do a lot of stuff with
+## AI, but don't want to tell it all about your life This works with IPv4 only
+## right now
 ## 
-## TODO: Make it so users can type custom strings to redact.
-## Best for names, which vary from person to person.
 
+# Use Ruby builtin command line parser see https://docs.ruby-lang.org/en/master/optparse/tutorial_rdoc.html
+require 'optparse'
 
-input_file = ARGV[0]
-output_file = ARGV[1]
-name = ARGV[2]
-replacement_name = ARGV[3]
+# Create the parser object
+parser = OptionParser.new
 
-ip_address = "192.168.10.10"
-email_address = "foobar@fenrirnull.com"
+# Define the options that we want:
+parser.on('--redact-ip BOOL', TrueClass, 'Toggles redaction of ip addresses. Default on')
+parser.on('--redact-email BOOL', TrueClass, 'Toggles redaction of email addresses. Default on')
+#parser.on('--redact-string ORIGINAL REPLACEMENT', String, 'Replaces the original string with the replacement')
+parser.on('--redact-string LIST', Array, 'Original and replacement') do |list|
+  original, replacement = list
+end
 
+# Perform the command line parsing and spit it into the options that we can use
+# later. This is the default options list that will be modified as needed by
+# the parser.
+options = {
+  :'redact-ip' => true,
+  :'redact-email' => true,
+}
+parser.parse!(into: options)
+puts options
+
+# Now we can pull the file paths out from ARGV
 if ARGV[0,1].empty?
   puts <<~ERROR
     Error: No input file specified.
 
     Usage:
-      ruby main.rb <input_file> <output_file> [name_to_replace] [replacment name]
+      ruby redact.rb <input_file> <output_file> [options]
 
     Example:
-      ruby main.rb report.txt redacted.txt Fenrir Bob
+      ruby redact.rb report.txt redacted.txt
+
+    Run ruby redact.rb --help for more command line options.
   ERROR
 
   exit 1
 end
+INPUT_FILE = ARGV[0]
+OUTPUT_FILE = ARGV[1]
 
-puts "Processing #{input_file}"
+# Now we can require our redaction class. Does not actually need to wait for
+# the parser but all of the setup is here for logical convenience for now.
+require './redact.rb'
+redactor = Redact.new(options)
 
-File.open(output_file, "w") do |output|
 
-  File.foreach(input_file) do |line|
+name = ARGV[2]
+replacement_name = ARGV[3]
+
+
+puts "Processing #{INPUT_FILE}"
+
+File.open(OUTPUT_FILE, "w") do |output|
+
+  File.foreach(INPUT_FILE) do |input_file_line|
+
+    input_file_line = redactor.parse_data(input_file_line)
     
-    line = line.gsub(/\b(?:\d{1,3}\.){3}\d{1,3}\b/, ip_address)
 
-    line = line.gsub(/\b[A-Za-z0-9._%+-]+@[A-Za-z]+\.[A-Za-z]{2,}\b/, email_address)
-
-    unless name.empty?
-      line = line.gsub(name, replacement_name)
-    end
+    #unless name.empty?
+    #  input_file_line = input_file_line.gsub(name, replacement_name)
+    #end
     
-    puts line
+    puts input_file_line
 
-    output.write(line)
-    
+    # Finally after removing all stuff from the line, write it to file
+    output.write(input_file_line)
   end
 end
