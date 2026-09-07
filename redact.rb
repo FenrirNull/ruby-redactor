@@ -29,11 +29,21 @@ class Redact
       data.gsub!(/(?:"[^"]+"|[a-zA-Z0-9_.+\-]+)@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|\d{1,3}(?:\.\d{1,3}){3}|\[\d{1,3}(?:\.\d{1,3}){3}\])/, DEFAULT_EMAIL_ADDRESS)
     end
 
-    if @options[:'redact-string']
-      name, replacement_name = @options[:'redact-string']
-      data.gsub!(name, replacement_name)
-    end
 
+    #Iterate through the redact-string list to make sure that all of the strings were redacted
+    
+    idx = 0
+    while idx < @options[:'redact-string'].length
+
+      if @options[:'redact-string']
+        name = @options[:'redact-string'][idx]
+        replacement_name = @options[:'redact-string'][idx + 1]
+        data.gsub!(name, replacement_name)
+      end
+
+      idx += 2
+
+    end
     # Finally after removing all of the stuff from the data, send it back
     return data
   end

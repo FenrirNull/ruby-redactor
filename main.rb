@@ -41,7 +41,7 @@ if ARGV[0,1].empty?
     Example:
       ruby main.rb report.txt redacted.txt
 
-    Run ruby redact.rb --help for more command line options.
+    Run ruby main.rb --help for more command line options.
   ERROR
 
   exit 1
