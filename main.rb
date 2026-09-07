@@ -9,6 +9,7 @@
 
 # Use Ruby builtin command line parser see https://docs.ruby-lang.org/en/master/optparse/tutorial_rdoc.html
 require 'optparse'
+require 'ipaddr'
 
 # Create the parser object
 parser = OptionParser.new
@@ -16,6 +17,7 @@ parser = OptionParser.new
 # Define the options that we want:
 parser.on('--redact-ip BOOL', TrueClass, 'Toggles redaction of ip addresses. Default on')
 parser.on('--redact-email BOOL', TrueClass, 'Toggles redaction of email addresses. Default on')
+parser.on('--redact-ipv6 BOOL', FalseClass, 'Toggles reaction of IPv6 addresses. Default on')
 parser.on('--redact-string LIST', Array, 'Original and replacement') do |list|
   original, replacement = list
 end
@@ -23,9 +25,11 @@ end
 # Perform the command line parsing and spit it into the options that we can use
 # later. This is the default options list that will be modified as needed by
 # the parser.
+
 options = {
   :'redact-ip' => true,
   :'redact-email' => true,
+  :'redact-ipv6' => true
 }
 parser.parse!(into: options)
 puts options

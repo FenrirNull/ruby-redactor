@@ -8,10 +8,8 @@
 
 # TODO
 
-- [x] Custom string redaction
-  - [x] Match single string
-  - [x] Match multiple strings
 - [ ] Flesh out testing
   - [ ] Custom string testing
   - [ ] Finish IP matching testing
     - [ ] Fix IPV6 matches
+    - [ ] Fix embedded IPv4 addresses in IPv6
